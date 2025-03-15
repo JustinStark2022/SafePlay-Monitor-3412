@@ -1,74 +1,83 @@
 import { useState } from 'react';
-import ReactECharts from 'echarts-for-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
-import { RiShieldCheckLine, RiErrorWarningLine, RiTimeLine } from 'react-icons/ri';
+import {
+  RiShieldCheckLine,
+  RiErrorWarningLine,
+  RiTimeLine,
+  RiAlertFill,
+  RiUserAddLine,
+  RiMessage3Line,
+  RiCheckLine,
+  RiCloseLine
+} from 'react-icons/ri';
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('week');
-
-  const stats = [
+  const [notifications, setNotifications] = useState([
     {
-      icon: RiShieldCheckLine,
-      label: 'Safe Games',
-      value: '24',
-      color: 'bg-success-50 text-success-500'
-    },
-    {
-      icon: RiErrorWarningLine,
-      label: 'Flagged Content',
-      value: '3',
-      color: 'bg-danger-50 text-danger-500'
-    },
-    {
-      icon: RiTimeLine,
-      label: 'Avg. Daily Time',
-      value: '2.5h',
-      color: 'bg-primary-50 text-primary-500'
-    }
-  ];
-
-  const getChartOptions = () => ({
-    tooltip: {
-      trigger: 'axis'
-    },
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [{
-      data: [2.5, 3.0, 1.5, 2.0, 2.8, 4.0, 3.5],
-      type: 'line',
-      smooth: true,
-      lineStyle: {
-        color: '#0ea5e9'
-      },
-      areaStyle: {
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [{
-            offset: 0,
-            color: 'rgba(14, 165, 233, 0.3)'
-          }, {
-            offset: 1,
-            color: 'rgba(14, 165, 233, 0)'
-          }]
-        }
+      id: 1,
+      type: 'new_game',
+      timestamp: 'Just now',
+      content: 'Started playing "Blox Fruits"',
+      status: 'pending',
+      game: {
+        name: 'Blox Fruits',
+        summary: 'Action-adventure game with combat elements. Some concerns about in-app purchases.',
+        risk: 'MODERATE'
       }
-    }]
-  });
+    },
+    {
+      id: 2,
+      type: 'chat_alert',
+      timestamp: '5 minutes ago',
+      content: 'Inappropriate language detected in chat',
+      status: 'pending',
+      chatContext: {
+        game: 'Adopt Me!',
+        time: '2:30 PM',
+        messages: [
+          { user: 'Player123', message: 'Hey, want to trade pets?' },
+          { user: 'YourChild', message: 'Sure, what do you have?' },
+          { user: 'Player123', message: 'Give me your password and I will give you legendary pets!', flagged: true }
+        ]
+      }
+    },
+    {
+      id: 3,
+      type: 'friend_request',
+      timestamp: '10 minutes ago',
+      content: 'New friend request received',
+      status: 'pending',
+      friendRequest: {
+        username: 'Player456',
+        age: 'Unknown',
+        mutualFriends: 2
+      }
+    }
+  ]);
+
+  const handleAction = (id, action) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === id ? { ...notif, status: action } : notif
+      )
+    );
+  };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'new_game': return RiAlertFill;
+      case 'chat_alert': return RiMessage3Line;
+      case 'friend_request': return RiUserAddLine;
+      default: return RiAlertFill;
+    }
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Real-Time Monitoring</h1>
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
@@ -80,53 +89,101 @@ const Dashboard = () => {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-lg shadow-sm p-6"
-          >
-            <div className="flex items-center">
-              <div className={`p-3 rounded-full ${stat.color}`}>
-                <stat.icon className="w-6 h-6" />
-              </div>
-              <div className="ml-4">
-                <h2 className="text-sm font-medium text-gray-500">{stat.label}</h2>
-                <p className="text-2xl font-semibold text-gray-800">{stat.value}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      <div className="space-y-4">
+        <AnimatePresence>
+          {notifications.map((notification) => {
+            const Icon = getNotificationIcon(notification.type);
+            return (
+              <motion.div
+                key={notification.id}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-white rounded-lg shadow-sm p-6"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start space-x-4">
+                    <div className="p-3 bg-primary-50 rounded-full">
+                      <Icon className="w-6 h-6 text-primary-600" />
+                    </div>
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <h3 className="text-lg font-semibold text-gray-800">
+                          {notification.content}
+                        </h3>
+                        <span className="text-sm text-gray-500">
+                          {notification.timestamp}
+                        </span>
+                      </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Gaming Activity</h2>
-        <ReactECharts option={getChartOptions()} style={{ height: '400px' }} />
-      </div>
+                      {notification.type === 'new_game' && (
+                        <div className="mt-3 bg-gray-50 p-4 rounded-lg">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-semibold text-gray-700">{notification.game.name}</h4>
+                            <span className={`px-2 py-1 rounded text-sm ${
+                              notification.game.risk === 'HIGH' ? 'bg-danger-50 text-danger-600' : 'bg-yellow-50 text-yellow-600'
+                            }`}>
+                              {notification.game.risk}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600">{notification.game.summary}</p>
+                        </div>
+                      )}
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Alerts</h2>
-        <div className="space-y-4">
-          {[...Array(3)].map((_, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center">
-                <div className="bg-danger-50 p-2 rounded-full">
-                  <RiErrorWarningLine className="w-5 h-5 text-danger-500" />
+                      {notification.type === 'chat_alert' && (
+                        <div className="mt-3 bg-gray-50 p-4 rounded-lg">
+                          <div className="mb-2">
+                            <span className="text-sm font-semibold text-gray-700">
+                              Chat from {notification.chatContext.game} at {notification.chatContext.time}
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            {notification.chatContext.messages.map((msg, i) => (
+                              <div 
+                                key={i} 
+                                className={`p-2 rounded ${msg.flagged ? 'bg-danger-50' : 'bg-white'}`}
+                              >
+                                <span className="font-semibold text-sm">{msg.user}: </span>
+                                <span className="text-sm">{msg.message}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {notification.type === 'friend_request' && (
+                        <div className="mt-3 bg-gray-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-gray-700">User: {notification.friendRequest.username}</h4>
+                          <p className="text-sm text-gray-600">Age: {notification.friendRequest.age}</p>
+                          <p className="text-sm text-gray-600">Mutual Friends: {notification.friendRequest.mutualFriends}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {notification.status === 'pending' && (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleAction(notification.id, 'approved')}
+                        className="flex items-center px-3 py-2 bg-success-500 text-white rounded-lg hover:bg-success-600 transition-colors"
+                      >
+                        <RiCheckLine className="w-5 h-5 mr-1" />
+                        Allow
+                      </button>
+                      <button
+                        onClick={() => handleAction(notification.id, 'blocked')}
+                        className="flex items-center px-3 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600 transition-colors"
+                      >
+                        <RiCloseLine className="w-5 h-5 mr-1" />
+                        Block
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <div className="ml-4">
-                  <h3 className="text-sm font-medium text-gray-800">Inappropriate Content Detected</h3>
-                  <p className="text-sm text-gray-500">Game: Adopt Me!</p>
-                </div>
-              </div>
-              <span className="text-sm text-gray-500">
-                {format(new Date().setHours(new Date().getHours() - index), 'h:mm a')}
-              </span>
-            </div>
-          ))}
-        </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </div>
   );
