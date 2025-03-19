@@ -53,11 +53,7 @@ This **Christian-focused parental control app** integrates **scripture memorizat
 | **Web Scraping (Cheerio/Puppeteer)**  | Automated data collection from web |
 | **TensorFlow.js/Python AI models**  | Chat analysis and predatory behavior detection |
 | **Roblox API**  | Game monitoring and integration |
-
----
-
-## Installation & Setup  
-
+ 
 ### Prerequisites  
 Ensure you have the following installed:  
 - **Node.js** (LTS version recommended)  
@@ -65,11 +61,3 @@ Ensure you have the following installed:
 - **MongoDB** (For local database testing)  
 - **Firebase/Auth0 account** (for authentication)  
 - **Roblox API key** (for game monitoring)  
-
-### Clone the Repository  
-```sh
-git clone https://git![Uploading readme.png…]()
-hub.com/JustinStark2022/The-Good-Gaming-Shepherd.git
-cd The-Good-Gaming-Shepherd
-
-![image](https://github.com/user-attachments/assets/460885a6-68ac-4841-a0ca-10bc623622c6)
