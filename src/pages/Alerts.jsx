@@ -47,7 +47,7 @@ const Alerts = () => {
       context: {
         behavior: 'Attempting to move conversation to external platform',
         messages: [
-          { user: 'SuspectUser', message: 'Let's talk on discord instead', flagged: true }
+          { user: 'SuspectUser', message: "Let's talk on discord instead", flagged: true }
         ]
       }
     }
