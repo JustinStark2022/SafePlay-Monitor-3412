@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { 
-  RiErrorWarningLine, 
-  RiTimeLine, 
-  RiMessage2Line, 
+import {
+  RiErrorWarningLine,
+  RiTimeLine,
+  RiMessage2Line,
   RiUserAddLine,
   RiShieldLine
 } from 'react-icons/ri';
@@ -20,7 +20,7 @@ const Alerts = () => {
         messages: [
           { user: 'Player123', message: 'Hey want to trade pets?' },
           { user: 'YourChild', message: 'What pets do you have?' },
-          { user: 'Player123', message: "I'll give you pets if you tell me ..." }
+          { user: 'Player123', message: 'I will give you pets if you tell me your password', flagged: true }
         ]
       }
     },
@@ -47,7 +47,7 @@ const Alerts = () => {
       context: {
         behavior: 'Attempting to move conversation to external platform',
         messages: [
-          { user: 'SuspectUser', message: "Let's talk on discord instead", flagged: true }
+          { user: 'SuspectUser', message: 'Let us talk on discord instead', flagged: true }
         ]
       }
     }
