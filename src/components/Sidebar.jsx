@@ -1,10 +1,23 @@
 import { NavLink } from 'react-router-dom';
-import { RiDashboardLine, RiGamepadLine, RiAlertLine, RiSettings4Line } from 'react-icons/ri';
+import { 
+  RiDashboardLine, 
+  RiGamepadLine, 
+  RiAlertLine, 
+  RiSettings4Line,
+  RiBibleLine,
+  RiBookReadLine,
+  RiHeartLine,
+  RiStarLine
+} from 'react-icons/ri';
 
 const Sidebar = () => {
   const menuItems = [
     { path: '/', icon: RiDashboardLine, label: 'Dashboard' },
     { path: '/games', icon: RiGamepadLine, label: 'Games' },
+    { path: '/bible', icon: RiBibleLine, label: 'Bible Reader' },
+    { path: '/scripture', icon: RiBookReadLine, label: 'Scripture Library' },
+    { path: '/prayer', icon: RiHeartLine, label: 'Prayer Journal' },
+    { path: '/achievements', icon: RiStarLine, label: 'Achievements' },
     { path: '/alerts', icon: RiAlertLine, label: 'Alerts' },
     { path: '/settings', icon: RiSettings4Line, label: 'Settings' }
   ];
@@ -12,7 +25,7 @@ const Sidebar = () => {
   return (
     <aside className="bg-white w-64 h-screen shadow-lg">
       <div className="p-6">
-        <h1 className="text-2xl font-bold text-primary-600">RobloxGuard</h1>
+        <h1 className="text-2xl font-bold text-primary-600">GuardianShepherd</h1>
       </div>
       <nav className="mt-6">
         {menuItems.map((item) => (
@@ -21,7 +34,9 @@ const Sidebar = () => {
             to={item.path}
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-gray-600 hover:bg-primary-50 hover:text-primary-600 transition-colors ${
-                isActive ? 'bg-primary-50 text-primary-600 border-r-4 border-primary-600' : ''
+                isActive
+                  ? 'bg-primary-50 text-primary-600 border-r-4 border-primary-600'
+                  : ''
               }`
             }
           >
@@ -32,6 +47,6 @@ const Sidebar = () => {
       </nav>
     </aside>
   );
-}
+};
 
 export default Sidebar;
