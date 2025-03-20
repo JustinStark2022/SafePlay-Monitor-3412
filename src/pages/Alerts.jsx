@@ -20,7 +20,7 @@ const Alerts = () => {
         messages: [
           { user: 'Player123', message: 'Hey want to trade pets?' },
           { user: 'YourChild', message: 'What pets do you have?' },
-          { user: 'Player123', message: 'I'll give you pets if you tell me your password', flagged: true }
+          { user: 'Player123', message: "I'll give you pets if you tell me ..." }
         ]
       }
     },
