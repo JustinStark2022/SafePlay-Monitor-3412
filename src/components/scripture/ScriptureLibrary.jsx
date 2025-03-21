@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { RiBibleLine, RiBookmarkLine, RiHeartLine, RiStarLine, RiShieldLine } from 'react-icons/ri';
+import {
+  RiBibleLine,
+  RiBookmarkLine,
+  RiHeartLine,
+  RiShieldLine
+} from 'react-icons/ri';
 
 const ScriptureLibrary = () => {
   const [selectedCategory, setSelectedCategory] = useState(() => {
@@ -24,7 +29,7 @@ const ScriptureLibrary = () => {
     { id: 'all', name: 'All Verses' },
     { id: 'love', name: "God's Love", icon: RiHeartLine },
     { id: 'courage', name: 'Courage', icon: RiShieldLine },
-    { id: 'wisdom', name: 'Wisdom', icon: RiStarLine },
+    { id: 'wisdom', name: 'Wisdom', icon: RiBibleLine }, // you can assign a different icon here if needed
     { id: 'faith', name: 'Faith', icon: RiBibleLine }
   ];
 
