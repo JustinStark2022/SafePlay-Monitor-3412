@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { RiBookOpenLine, RiBookmarkLine, RiStarLine } from 'react-icons/ri';
+import {
+  RiBookOpenLine,
+  RiHeartLine,
+  RiCheckLine,
+  RiLightbulbLine
+} from 'react-icons/ri';
 
 const DailyDevotional = () => {
   const [devotional, setDevotional] = useState(() => {
@@ -10,7 +15,8 @@ const DailyDevotional = () => {
       : {
           title: "God's Love for Us",
           verse: {
-            text: "God loved the world so much that he gave his one and only Son. Anyone who believes in him will not die but will have eternal life.",
+            text:
+              "God loved the world so much that he gave his one and only Son. Anyone who believes in him will not die but will have eternal life.",
             reference: "John 3:16 (NIrV)"
           },
           explanation:
@@ -36,19 +42,32 @@ const DailyDevotional = () => {
     setDevotional((prev) => ({ ...prev, completed: true }));
   };
 
+  const resetDevotional = () => {
+    setDevotional((prev) => ({ ...prev, completed: false }));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg shadow-lg p-6"
+      className="bg-white rounded-lg shadow-lg p-6 max-w-3xl mx-auto"
     >
       <div className="flex items-center space-x-4 mb-6">
         <div className="p-3 bg-primary-50 rounded-full">
-        <RiBookOpenLine className="w-6 h-6 text-primary-600" />
-
+          <RiBookOpenLine className="w-6 h-6 text-primary-600" />
         </div>
         <h2 className="text-xl font-bold text-gray-800">Today's Devotional</h2>
       </div>
+
+      {devotional.completed && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="p-4 text-center bg-success-50 text-success-600 rounded-lg mb-4"
+        >
+          ✅ Great job finishing today’s devotional!
+        </motion.div>
+      )}
 
       <div className="space-y-6">
         <div className="bg-primary-50 p-4 rounded-lg">
@@ -88,18 +107,29 @@ const DailyDevotional = () => {
           </div>
         </div>
 
-        <button
-          onClick={markCompleted}
-          disabled={devotional.completed}
-          className={`mt-4 px-4 py-2 rounded-lg transition-colors flex items-center ${
-            devotional.completed
-              ? 'bg-success-50 text-success-600 cursor-default'
-              : 'bg-primary-600 text-white hover:bg-primary-700'
-          }`}
-        >
-          <RiCheckLine className="w-5 h-5 mr-2" />
-          {devotional.completed ? 'Completed!' : 'Mark as Completed'}
-        </button>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6">
+          <button
+            onClick={markCompleted}
+            disabled={devotional.completed}
+            className={`flex items-center justify-center px-4 py-2 rounded-lg transition-colors ${
+              devotional.completed
+                ? 'bg-success-50 text-success-600 cursor-default'
+                : 'bg-primary-600 text-white hover:bg-primary-700'
+            }`}
+          >
+            <RiCheckLine className="w-5 h-5 mr-2" />
+            {devotional.completed ? 'Completed!' : 'Mark as Completed'}
+          </button>
+
+          {devotional.completed && (
+            <button
+              onClick={resetDevotional}
+              className="text-sm text-gray-500 underline hover:text-primary-600"
+            >
+              Reset Devotional
+            </button>
+          )}
+        </div>
       </div>
     </motion.div>
   );
