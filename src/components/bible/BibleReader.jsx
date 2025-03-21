@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { RiBibleLine, RiBookmarkLine, RiStarLine } from 'react-icons/ri';
+import { RiBookOpenLine, RiBookmarkLine, RiStarLine } from 'react-icons/ri';
 
 const BibleReader = () => {
   const [currentBook, setCurrentBook] = useState('Genesis');
@@ -36,7 +36,8 @@ const BibleReader = () => {
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center space-x-4 mb-6">
         <div className="p-3 bg-primary-50 rounded-full">
-          <RiBibleLine className="w-6 h-6 text-primary-600" />
+        <RiBookOpenLine className="w-6 h-6 text-primary-600" />
+
         </div>
         <h2 className="text-xl font-bold text-gray-800">Kid's Bible Reader</h2>
       </div>
