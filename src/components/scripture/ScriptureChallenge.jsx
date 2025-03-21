@@ -1,17 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { RiBibleLine, RiStarLine, RiTimeLine, RiCheckLine } from 'react-icons/ri';
+import {
+  RiBibleLine,
+  RiStarLine,
+  RiTimeLine
+} from 'react-icons/ri';
 
 const ScriptureChallenge = ({ onComplete }) => {
   const [currentScripture] = useState({
-    verse: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
-    reference: "John 3:16",
-    explanation: "This verse shows God's incredible love for us. He loved us so much that He gave His Son Jesus to save us.",
-    application: "When we feel unloved or alone, we can remember that God loves us deeply and personally.",
+    verse:
+      'For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.',
+    reference: 'John 3:16',
+    explanation:
+      "This verse shows God's incredible love for us. He loved us so much that He gave His Son Jesus to save us.",
+    application:
+      'When we feel unloved or alone, we can remember that God loves us deeply and personally.',
     quiz: [
       {
-        question: "What did God give because He loved the world?",
-        options: ["His Son", "A book", "A new law", "A friend"],
+        question: 'What did God give because He loved the world?',
+        options: ['His Son', 'A book', 'A new law', 'A friend'],
         correct: 0
       }
     ]
