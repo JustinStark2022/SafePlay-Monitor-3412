@@ -1,13 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { RiBibleLine, RiBookmarkLine, RiHeartLine, RiStarLine } from 'react-icons/ri';
+import { RiBibleLine, RiBookmarkLine, RiHeartLine, RiStarLine, RiShieldLine } from 'react-icons/ri';
 
 const ScriptureLibrary = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    return localStorage.getItem('selectedCategory') || 'all';
+  });
+
+  const [bookmarks, setBookmarks] = useState(() => {
+    const storedBookmarks = localStorage.getItem('bookmarks');
+    return storedBookmarks ? JSON.parse(storedBookmarks) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+  }, [bookmarks]);
+
   const categories = [
     { id: 'all', name: 'All Verses' },
-    { id: 'love', name: 'God\'s Love', icon: RiHeartLine },
+    { id: 'love', name: "God's Love", icon: RiHeartLine },
     { id: 'courage', name: 'Courage', icon: RiShieldLine },
     { id: 'wisdom', name: 'Wisdom', icon: RiStarLine },
     { id: 'faith', name: 'Faith', icon: RiBibleLine }
@@ -34,8 +49,13 @@ const ScriptureLibrary = () => {
       explanation: "God promises to be with us always!",
       application: "When you're scared, remember God is with you."
     }
-    // Add more verses...
   ];
+
+  const toggleBookmark = (id) => {
+    setBookmarks((prev) =>
+      prev.includes(id) ? prev.filter((bookmark) => bookmark !== id) : [...prev, id]
+    );
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
@@ -65,7 +85,7 @@ const ScriptureLibrary = () => {
 
       <div className="grid gap-6">
         {verses
-          .filter(verse => selectedCategory === 'all' || verse.category === selectedCategory)
+          .filter((verse) => selectedCategory === 'all' || verse.category === selectedCategory)
           .map((verse) => (
             <motion.div
               key={verse.id}
@@ -82,8 +102,15 @@ const ScriptureLibrary = () => {
                   <span className="px-3 py-1 bg-primary-50 text-primary-600 rounded-full text-sm">
                     {verse.points} pts
                   </span>
-                  <button className="p-2 hover:bg-gray-100 rounded-full">
-                    <RiBookmarkLine className="w-5 h-5 text-gray-500" />
+                  <button
+                    onClick={() => toggleBookmark(verse.id)}
+                    className={`p-2 rounded-full transition-colors ${
+                      bookmarks.includes(verse.id)
+                        ? 'bg-primary-100 text-primary-600'
+                        : 'hover:bg-gray-100 text-gray-500'
+                    }`}
+                  >
+                    <RiBookmarkLine className="w-5 h-5" />
                   </button>
                 </div>
               </div>

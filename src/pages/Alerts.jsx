@@ -1,14 +1,16 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   RiErrorWarningLine,
   RiTimeLine,
   RiMessage2Line,
   RiUserAddLine,
-  RiShieldLine
+  RiShieldLine,
+  RiCloseLine
 } from 'react-icons/ri';
 
 const Alerts = () => {
-  const alerts = [
+  const initialAlerts = [
     {
       id: 1,
       type: 'chat_violation',
@@ -53,6 +55,21 @@ const Alerts = () => {
     }
   ];
 
+  const [alerts, setAlerts] = useState(() => {
+    const storedAlerts = localStorage.getItem('alerts');
+    return storedAlerts ? JSON.parse(storedAlerts) : initialAlerts;
+  });
+
+  const [filter, setFilter] = useState('all');
+
+  useEffect(() => {
+    localStorage.setItem('alerts', JSON.stringify(alerts));
+  }, [alerts]);
+
+  const dismissAlert = (id) => {
+    setAlerts((prevAlerts) => prevAlerts.filter(alert => alert.id !== id));
+  };
+
   const getAlertIcon = (type) => {
     switch (type) {
       case 'chat_violation': return RiMessage2Line;
@@ -76,18 +93,20 @@ const Alerts = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Alert History</h1>
-        <div className="flex space-x-4">
-          <select className="px-4 py-2 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500">
-            <option value="all">All Types</option>
-            <option value="chat">Chat Violations</option>
-            <option value="friend">Friend Requests</option>
-            <option value="behavioral">Behavioral</option>
-          </select>
-        </div>
+        <select 
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="px-4 py-2 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+          <option value="all">All Types</option>
+          <option value="chat_violation">Chat Violations</option>
+          <option value="friend_request">Friend Requests</option>
+          <option value="behavioral">Behavioral</option>
+        </select>
       </div>
 
       <div className="space-y-4">
-        {alerts.map((alert, index) => {
+        {alerts.filter(alert => filter === 'all' || alert.type === filter).map((alert, index) => {
           const Icon = getAlertIcon(alert.type);
           return (
             <motion.div
@@ -103,42 +122,31 @@ const Alerts = () => {
                     <Icon className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="flex items-center space-x-2">
-                      <h3 className="text-lg font-semibold text-gray-800">{alert.game}</h3>
-                      <span className="text-sm text-gray-500">{alert.timestamp}</span>
-                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800">{alert.game}</h3>
+                    <p className="text-sm text-gray-500">{alert.timestamp}</p>
                     <p className="text-sm text-gray-500 mt-1">{alert.description}</p>
 
                     <div className="mt-4 bg-gray-50 p-4 rounded-lg">
-                      {alert.type === 'chat_violation' && (
-                        <div className="space-y-2">
-                          {alert.context.messages.map((msg, i) => (
-                            <div 
-                              key={i} 
-                              className={`p-2 rounded ${msg.flagged ? 'bg-danger-50' : 'bg-white'}`}
-                            >
-                              <span className="font-semibold text-sm">{msg.user}: </span>
-                              <span className="text-sm">{msg.message}</span>
-                            </div>
-                          ))}
+                      {alert.type === 'chat_violation' && alert.context.messages.map((msg, i) => (
+                        <div key={i} className={`p-2 rounded ${msg.flagged ? 'bg-danger-50' : 'bg-white'}`}>
+                          <strong>{msg.user}: </strong>{msg.message}
                         </div>
-                      )}
+                      ))}
 
                       {alert.type === 'friend_request' && (
                         <div>
-                          <p className="text-sm"><span className="font-semibold">Username:</span> {alert.context.username}</p>
-                          <p className="text-sm"><span className="font-semibold">Account Age:</span> {alert.context.accountAge}</p>
-                          <p className="text-sm"><span className="font-semibold">Suspicious Behavior:</span> {alert.context.behavior}</p>
+                          <p><strong>Username:</strong> {alert.context.username}</p>
+                          <p><strong>Account Age:</strong> {alert.context.accountAge}</p>
+                          <p><strong>Behavior:</strong> {alert.context.behavior}</p>
                         </div>
                       )}
 
                       {alert.type === 'behavioral' && (
                         <div>
-                          <p className="text-sm font-semibold text-danger-600">{alert.context.behavior}</p>
+                          <p className="font-semibold text-danger-600">{alert.context.behavior}</p>
                           {alert.context.messages.map((msg, i) => (
                             <div key={i} className="mt-2 p-2 bg-danger-50 rounded">
-                              <span className="font-semibold text-sm">{msg.user}: </span>
-                              <span className="text-sm">{msg.message}</span>
+                              <strong>{msg.user}: </strong>{msg.message}
                             </div>
                           ))}
                         </div>
@@ -146,6 +154,9 @@ const Alerts = () => {
                     </div>
                   </div>
                 </div>
+                <button onClick={() => dismissAlert(alert.id)} className="text-gray-400 hover:text-gray-600">
+                  <RiCloseLine className="w-6 h-6" />
+                </button>
               </div>
             </motion.div>
           );

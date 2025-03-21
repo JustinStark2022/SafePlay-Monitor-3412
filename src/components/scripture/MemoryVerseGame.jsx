@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RiStarLine, RiTimeLine, RiGamepadLine } from 'react-icons/ri';
+import { RiStarLine, RiGamepadLine, RiRefreshLine } from 'react-icons/ri';
 
 const MemoryVerseGame = ({ onComplete }) => {
   const [verse, setVerse] = useState({
@@ -12,14 +12,20 @@ const MemoryVerseGame = ({ onComplete }) => {
   const [scrambledWords, setScrambledWords] = useState([]);
   const [selectedWords, setSelectedWords] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [points, setPoints] = useState(0);
+  const [points, setPoints] = useState(() => {
+    const storedPoints = localStorage.getItem('memoryVersePoints');
+    return storedPoints ? parseInt(storedPoints, 10) : 0;
+  });
 
   useEffect(() => {
-    // Split and scramble verse words
     const words = verse.text.split(' ');
     setVerse(prev => ({ ...prev, words }));
     setScrambledWords(shuffleArray([...words]));
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('memoryVersePoints', points);
+  }, [points]);
 
   const shuffleArray = (array) => {
     const newArray = [...array];
@@ -33,8 +39,7 @@ const MemoryVerseGame = ({ onComplete }) => {
   const handleWordSelect = (word, index) => {
     setSelectedWords(prev => [...prev, word]);
     setScrambledWords(prev => prev.filter((_, i) => i !== index));
-    
-    // Check if verse is complete and correct
+
     const newSelected = [...selectedWords, word];
     if (newSelected.length === verse.words.length) {
       const isVerseCorrect = newSelected.join(' ') === verse.text;
@@ -113,9 +118,9 @@ const MemoryVerseGame = ({ onComplete }) => {
               <p className="text-success-600">You've memorized the verse!</p>
               <button
                 onClick={resetGame}
-                className="mt-4 px-4 py-2 bg-success-500 text-white rounded-lg hover:bg-success-600 transition-colors"
+                className="mt-4 px-4 py-2 bg-success-500 text-white rounded-lg hover:bg-success-600 transition-colors flex items-center justify-center gap-2"
               >
-                Try Another Verse
+                <RiRefreshLine className="w-5 h-5" /> Try Another Verse
               </button>
             </motion.div>
           )}

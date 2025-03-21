@@ -1,22 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { RiBibleLine, RiLightbulbLine, RiHeartLine } from 'react-icons/ri';
+import { RiBibleLine, RiLightbulbLine, RiHeartLine, RiCheckLine } from 'react-icons/ri';
 
 const DailyDevotional = () => {
-  const [devotional] = useState({
-    title: "God's Love for Us",
-    verse: {
-      text: "God loved the world so much that he gave his one and only Son. Anyone who believes in him will not die but will have eternal life.",
-      reference: "John 3:16 (NIrV)"
-    },
-    explanation: "This verse tells us about God's amazing love. He loves us so much that He gave us Jesus, His only Son. When we believe in Jesus, we get to live forever with God!",
-    application: "Remember that God loves you no matter what! When you feel sad or alone, you can always talk to God because He cares about you.",
-    prayer: "Dear God, thank you for loving me so much. Thank you for sending Jesus to be my friend and savior. Help me to share your love with others today. Amen.",
-    activity: {
-      title: "Love in Action",
-      description: "Draw a picture of how you can show God's love to someone today. Maybe helping a friend or giving someone a hug!"
-    }
+  const [devotional, setDevotional] = useState(() => {
+    const storedDevotional = localStorage.getItem('devotional');
+    return storedDevotional
+      ? JSON.parse(storedDevotional)
+      : {
+          title: "God's Love for Us",
+          verse: {
+            text: "God loved the world so much that he gave his one and only Son. Anyone who believes in him will not die but will have eternal life.",
+            reference: "John 3:16 (NIrV)"
+          },
+          explanation:
+            "This verse tells us about God's amazing love. He loves us so much that He gave us Jesus, His only Son. When we believe in Jesus, we get to live forever with God!",
+          application:
+            "Remember that God loves you no matter what! When you feel sad or alone, you can always talk to God because He cares about you.",
+          prayer:
+            "Dear God, thank you for loving me so much. Thank you for sending Jesus to be my friend and savior. Help me to share your love with others today. Amen.",
+          activity: {
+            title: "Love in Action",
+            description:
+              "Draw a picture of how you can show God's love to someone today. Maybe helping a friend or giving someone a hug!"
+          },
+          completed: false
+        };
   });
+
+  useEffect(() => {
+    localStorage.setItem('devotional', JSON.stringify(devotional));
+  }, [devotional]);
+
+  const markCompleted = () => {
+    setDevotional((prev) => ({ ...prev, completed: true }));
+  };
 
   return (
     <motion.div
@@ -68,6 +86,19 @@ const DailyDevotional = () => {
             <p className="text-gray-600 mt-1">{devotional.activity.description}</p>
           </div>
         </div>
+
+        <button
+          onClick={markCompleted}
+          disabled={devotional.completed}
+          className={`mt-4 px-4 py-2 rounded-lg transition-colors flex items-center ${
+            devotional.completed
+              ? 'bg-success-50 text-success-600 cursor-default'
+              : 'bg-primary-600 text-white hover:bg-primary-700'
+          }`}
+        >
+          <RiCheckLine className="w-5 h-5 mr-2" />
+          {devotional.completed ? 'Completed!' : 'Mark as Completed'}
+        </button>
       </div>
     </motion.div>
   );

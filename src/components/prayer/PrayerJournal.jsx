@@ -1,26 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { RiBookLine, RiHeartLine, RiAddLine, RiEditLine } from 'react-icons/ri';
+import { RiBookLine, RiHeartLine, RiAddLine, RiEditLine, RiDeleteBinLine } from 'react-icons/ri';
 
 const PrayerJournal = () => {
-  const [prayers, setPrayers] = useState([
-    {
-      id: 1,
-      date: '2024-03-15',
-      title: 'Prayer for Family',
-      content: 'Dear God, please bless my family and keep them safe...',
-      answered: false,
-      category: 'family'
-    },
-    {
-      id: 2,
-      date: '2024-03-14',
-      title: 'Thank You Prayer',
-      content: 'Thank you God for helping me with my test today...',
-      answered: true,
-      category: 'thanksgiving'
-    }
-  ]);
+  const [prayers, setPrayers] = useState(() => {
+    const storedPrayers = localStorage.getItem('prayers');
+    return storedPrayers ? JSON.parse(storedPrayers) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('prayers', JSON.stringify(prayers));
+  }, [prayers]);
 
   const [showNewPrayer, setShowNewPrayer] = useState(false);
   const [newPrayer, setNewPrayer] = useState({
@@ -30,12 +20,29 @@ const PrayerJournal = () => {
   });
 
   const categories = [
-    { id: 'all', name: 'All Prayers' },
+    { id: 'general', name: 'General' },
     { id: 'family', name: 'Family' },
     { id: 'friends', name: 'Friends' },
     { id: 'thanksgiving', name: 'Thank You' },
     { id: 'requests', name: 'Requests' }
   ];
+
+  const saveNewPrayer = () => {
+    setPrayers([
+      ...prayers,
+      { ...newPrayer, id: Date.now(), date: new Date().toISOString().split('T')[0], answered: false }
+    ]);
+    setShowNewPrayer(false);
+    setNewPrayer({ title: '', content: '', category: 'general' });
+  };
+
+  const toggleAnswered = (id) => {
+    setPrayers(prayers.map(prayer => prayer.id === id ? { ...prayer, answered: !prayer.answered } : prayer));
+  };
+
+  const deletePrayer = (id) => {
+    setPrayers(prayers.filter(prayer => prayer.id !== id));
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
@@ -82,9 +89,7 @@ const PrayerJournal = () => {
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
             >
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
+                <option key={category.id} value={category.id}>{category.name}</option>
               ))}
             </select>
             <div className="flex justify-end space-x-2">
@@ -95,10 +100,7 @@ const PrayerJournal = () => {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  // Add new prayer logic
-                  setShowNewPrayer(false);
-                }}
+                onClick={saveNewPrayer}
                 className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 Save Prayer
@@ -122,15 +124,12 @@ const PrayerJournal = () => {
                 <p className="text-sm text-gray-500">{prayer.date}</p>
               </div>
               <div className="flex items-center space-x-2">
-                <button className="p-2 hover:bg-gray-100 rounded-full">
-                  <RiEditLine className="w-5 h-5 text-gray-500" />
+                <button className="p-2 hover:bg-gray-100 rounded-full" onClick={() => deletePrayer(prayer.id)}>
+                  <RiDeleteBinLine className="w-5 h-5 text-gray-500" />
                 </button>
                 <button
-                  className={`p-2 rounded-full ${
-                    prayer.answered
-                      ? 'bg-success-50 text-success-600'
-                      : 'hover:bg-gray-100 text-gray-500'
-                  }`}
+                  onClick={() => toggleAnswered(prayer.id)}
+                  className={`p-2 rounded-full ${prayer.answered ? 'bg-success-50 text-success-600' : 'hover:bg-gray-100 text-gray-500'}`}
                 >
                   <RiHeartLine className="w-5 h-5" />
                 </button>

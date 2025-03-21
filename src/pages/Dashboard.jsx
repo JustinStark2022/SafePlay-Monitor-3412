@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { format } from 'date-fns';
 import {
   RiShieldCheckLine,
   RiErrorWarningLine,
@@ -14,55 +13,58 @@ import {
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('week');
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: 'new_game',
-      timestamp: 'Just now',
-      content: 'Started playing "Blox Fruits"',
-      status: 'pending',
-      game: {
-        name: 'Blox Fruits',
-        summary: 'Action-adventure game with combat elements. Some concerns about in-app purchases.',
-        risk: 'MODERATE'
+  const [notifications, setNotifications] = useState(() => {
+    const storedNotifications = localStorage.getItem('dashboardNotifications');
+    return storedNotifications ? JSON.parse(storedNotifications) : [
+      {
+        id: 1,
+        type: 'new_game',
+        timestamp: 'Just now',
+        content: 'Started playing "Blox Fruits"',
+        status: 'pending',
+        game: {
+          name: 'Blox Fruits',
+          summary: 'Action-adventure game with combat elements. Some concerns about in-app purchases.',
+          risk: 'MODERATE'
+        }
+      },
+      {
+        id: 2,
+        type: 'chat_alert',
+        timestamp: '5 minutes ago',
+        content: 'Inappropriate language detected in chat',
+        status: 'pending',
+        chatContext: {
+          game: 'Adopt Me!',
+          time: '2:30 PM',
+          messages: [
+            { user: 'Player123', message: 'Hey, want to trade pets?' },
+            { user: 'YourChild', message: 'Sure, what do you have?' },
+            { user: 'Player123', message: 'Give me your password and I will give you legendary pets!', flagged: true }
+          ]
+        }
+      },
+      {
+        id: 3,
+        type: 'friend_request',
+        timestamp: '10 minutes ago',
+        content: 'New friend request received',
+        status: 'pending',
+        friendRequest: {
+          username: 'Player456',
+          age: 'Unknown',
+          mutualFriends: 2
+        }
       }
-    },
-    {
-      id: 2,
-      type: 'chat_alert',
-      timestamp: '5 minutes ago',
-      content: 'Inappropriate language detected in chat',
-      status: 'pending',
-      chatContext: {
-        game: 'Adopt Me!',
-        time: '2:30 PM',
-        messages: [
-          { user: 'Player123', message: 'Hey, want to trade pets?' },
-          { user: 'YourChild', message: 'Sure, what do you have?' },
-          { user: 'Player123', message: 'Give me your password and I will give you legendary pets!', flagged: true }
-        ]
-      }
-    },
-    {
-      id: 3,
-      type: 'friend_request',
-      timestamp: '10 minutes ago',
-      content: 'New friend request received',
-      status: 'pending',
-      friendRequest: {
-        username: 'Player456',
-        age: 'Unknown',
-        mutualFriends: 2
-      }
-    }
-  ]);
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dashboardNotifications', JSON.stringify(notifications));
+  }, [notifications]);
 
   const handleAction = (id, action) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === id ? { ...notif, status: action } : notif
-      )
-    );
+    setNotifications(prev => prev.filter(notif => notif.id !== id));
   };
 
   const getNotificationIcon = (type) => {
@@ -107,55 +109,20 @@ const Dashboard = () => {
                       <Icon className="w-6 h-6 text-primary-600" />
                     </div>
                     <div>
-                      <div className="flex items-center space-x-2">
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          {notification.content}
-                        </h3>
-                        <span className="text-sm text-gray-500">
-                          {notification.timestamp}
-                        </span>
-                      </div>
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {notification.content}
+                      </h3>
+                      <span className="text-sm text-gray-500">
+                        {notification.timestamp}
+                      </span>
 
                       {notification.type === 'new_game' && (
                         <div className="mt-3 bg-gray-50 p-4 rounded-lg">
-                          <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-semibold text-gray-700">{notification.game.name}</h4>
-                            <span className={`px-2 py-1 rounded text-sm ${
-                              notification.game.risk === 'HIGH' ? 'bg-danger-50 text-danger-600' : 'bg-yellow-50 text-yellow-600'
-                            }`}>
-                              {notification.game.risk}
-                            </span>
-                          </div>
+                          <h4 className="font-semibold text-gray-700">{notification.game.name}</h4>
+                          <span className={`text-sm ${notification.game.risk === 'HIGH' ? 'text-danger-600' : 'text-yellow-600'}`}>
+                            Risk Level: {notification.game.risk}
+                          </span>
                           <p className="text-sm text-gray-600">{notification.game.summary}</p>
-                        </div>
-                      )}
-
-                      {notification.type === 'chat_alert' && (
-                        <div className="mt-3 bg-gray-50 p-4 rounded-lg">
-                          <div className="mb-2">
-                            <span className="text-sm font-semibold text-gray-700">
-                              Chat from {notification.chatContext.game} at {notification.chatContext.time}
-                            </span>
-                          </div>
-                          <div className="space-y-2">
-                            {notification.chatContext.messages.map((msg, i) => (
-                              <div 
-                                key={i} 
-                                className={`p-2 rounded ${msg.flagged ? 'bg-danger-50' : 'bg-white'}`}
-                              >
-                                <span className="font-semibold text-sm">{msg.user}: </span>
-                                <span className="text-sm">{msg.message}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {notification.type === 'friend_request' && (
-                        <div className="mt-3 bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-gray-700">User: {notification.friendRequest.username}</h4>
-                          <p className="text-sm text-gray-600">Age: {notification.friendRequest.age}</p>
-                          <p className="text-sm text-gray-600">Mutual Friends: {notification.friendRequest.mutualFriends}</p>
                         </div>
                       )}
                     </div>
@@ -165,17 +132,15 @@ const Dashboard = () => {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleAction(notification.id, 'approved')}
-                        className="flex items-center px-3 py-2 bg-success-500 text-white rounded-lg hover:bg-success-600 transition-colors"
+                        className="flex items-center px-3 py-2 bg-success-500 text-white rounded-lg hover:bg-success-600"
                       >
-                        <RiCheckLine className="w-5 h-5 mr-1" />
-                        Allow
+                        <RiCheckLine className="w-5 h-5 mr-1" />Allow
                       </button>
                       <button
                         onClick={() => handleAction(notification.id, 'blocked')}
-                        className="flex items-center px-3 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600 transition-colors"
+                        className="flex items-center px-3 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600"
                       >
-                        <RiCloseLine className="w-5 h-5 mr-1" />
-                        Block
+                        <RiCloseLine className="w-5 h-5 mr-1" />Block
                       </button>
                     </div>
                   )}

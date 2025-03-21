@@ -4,7 +4,7 @@ import {
   RiGamepadLine, 
   RiAlertLine, 
   RiSettings4Line,
-  RiBibleLine,
+  RiBookOpenLine,
   RiBookReadLine,
   RiHeartLine,
   RiStarLine
@@ -14,7 +14,7 @@ const Sidebar = () => {
   const menuItems = [
     { path: '/', icon: RiDashboardLine, label: 'Dashboard' },
     { path: '/games', icon: RiGamepadLine, label: 'Games' },
-    { path: '/bible', icon: RiBibleLine, label: 'Bible Reader' },
+    { path: '/bible', icon: RiBookOpenLine, label: 'Bible Reader' },
     { path: '/scripture', icon: RiBookReadLine, label: 'Scripture Library' },
     { path: '/prayer', icon: RiHeartLine, label: 'Prayer Journal' },
     { path: '/achievements', icon: RiStarLine, label: 'Achievements' },

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { RiBibleLine, RiStarLine, RiTimeLine } from 'react-icons/ri';
+import { RiBibleLine, RiStarLine, RiTimeLine, RiCheckLine } from 'react-icons/ri';
 
 const ScriptureChallenge = ({ onComplete }) => {
-  const [currentScripture, setCurrentScripture] = useState({
+  const [currentScripture] = useState({
     verse: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
     reference: "John 3:16",
     explanation: "This verse shows God's incredible love for us. He loved us so much that He gave His Son Jesus to save us.",
@@ -22,8 +22,10 @@ const ScriptureChallenge = ({ onComplete }) => {
   const [completed, setCompleted] = useState(false);
 
   const handleMemorizationCheck = () => {
-    if (userAnswer.toLowerCase() === currentScripture.verse.toLowerCase()) {
+    if (userAnswer.trim().toLowerCase() === currentScripture.verse.toLowerCase()) {
       setShowQuiz(true);
+    } else {
+      alert('Keep trying! Double-check the verse and try again.');
     }
   };
 
@@ -31,6 +33,8 @@ const ScriptureChallenge = ({ onComplete }) => {
     if (selectedAnswer === correctIndex) {
       setCompleted(true);
       onComplete && onComplete();
+    } else {
+      alert('Not quite right. Try again!');
     }
   };
 
@@ -56,7 +60,7 @@ const ScriptureChallenge = ({ onComplete }) => {
         <div className="space-y-4">
           <h3 className="font-semibold text-gray-700">Understanding the Scripture:</h3>
           <p className="text-gray-600">{currentScripture.explanation}</p>
-          
+
           <h3 className="font-semibold text-gray-700">Applying it to Your Life:</h3>
           <p className="text-gray-600">{currentScripture.application}</p>
         </div>
@@ -119,6 +123,6 @@ const ScriptureChallenge = ({ onComplete }) => {
       </motion.div>
     </div>
   );
-}
+};
 
 export default ScriptureChallenge;
