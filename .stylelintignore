@@ -1,2 +1,18 @@
-dist
-node_modules
+# Ignore config files
+tailwind.config.js
+postcss.config.js
+stylelint.config.js
+
+# Ignore JS and JSX files
+**/*.js
+**/*.jsx
+
+# Ignore build artifacts
+node_modules/
+dist/
+build/
+coverage/
+public/
+
+# Ignore compiled/minified CSS
+*.min.css
