@@ -1,10 +1,2 @@
-tailwind.config.js
-postcss.config.js
-**/*.js
-**/*.jsx
-node_modules/
-dist/
-build/
-coverage/
-public/
-*.min.css
+dist
+node_modules
