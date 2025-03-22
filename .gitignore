@@ -26,5 +26,5 @@ Thumbs.db
 coverage/
 
 # Optional: lock files if you want to exclude them (not always recommended)
-# package-lock.json
+ package-lock.json
 # yarn.lock
