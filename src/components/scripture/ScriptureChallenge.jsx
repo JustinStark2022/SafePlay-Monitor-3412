@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  RiBibleLine,
+  RiBookOpenLine,
   RiStarLine,
   RiTimeLine
 } from 'react-icons/ri';
@@ -54,7 +54,7 @@ const ScriptureChallenge = ({ onComplete }) => {
       >
         <div className="flex items-center space-x-4">
           <div className="p-3 bg-primary-50 rounded-full">
-            <RiBibleLine className="w-6 h-6 text-primary-600" />
+            <RiBookOpenLine className="w-6 h-6 text-primary-600" />
           </div>
           <h2 className="text-xl font-bold text-gray-800">Daily Scripture Challenge</h2>
         </div>
