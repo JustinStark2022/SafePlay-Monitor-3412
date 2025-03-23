@@ -32,6 +32,8 @@ export default {
         sunshine: '#ffdf64',
         mint: '#98f5e1',
         lavender: '#c4b5fd',
+        midnight: '#1e293b',
+        softgray: '#f7f7f7'
       },
       borderRadius: {
         xl: '1.25rem',
@@ -41,6 +43,7 @@ export default {
       boxShadow: {
         fun: '0 8px 20px rgba(0, 0, 0, 0.08)',
         bubble: '0 6px 18px rgba(255, 126, 185, 0.2)',
+        glow: '0 0 8px rgba(14, 165, 233, 0.3)',
       },
     },
   },

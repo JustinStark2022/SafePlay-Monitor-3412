@@ -1,3 +1,4 @@
+import avatarImage from '@/data/avatar.png'; // Adjust alias if needed
 import React from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -84,12 +85,25 @@ const NotificationCard = ({ notification, onAction }) => {
         )}
 
         {notification.type === 'friend_request' && notification.friendRequest && (
-          <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg space-y-1">
-            <p className="font-semibold text-green-800 dark:text-green-200">
-              Username: {notification.friendRequest.username}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Age: {notification.friendRequest.age} | Mutual Friends: {notification.friendRequest.mutualFriends}
+          <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg space-y-3">
+            <div className="flex items-center gap-4">
+              <img
+                src={avatarImage}
+                alt="Friend Avatar"
+                className="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover"
+              />
+              <div>
+                <p className="font-semibold text-green-800 dark:text-green-200">
+                  Username: {notification.friendRequest.username}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Age: {notification.friendRequest.age} | Mutual Friends: {notification.friendRequest.mutualFriends}
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 dark:text-gray-400">
+              <span className="font-medium">Recommendation:</span>{' '}
+              Approve only if the user is known and within a safe age range. Discuss with your child about accepting friend requests only from people they trust in real life.
             </p>
           </div>
         )}
@@ -114,5 +128,6 @@ const NotificationCard = ({ notification, onAction }) => {
     </motion.div>
   );
 };
+
 export default NotificationCard;
 

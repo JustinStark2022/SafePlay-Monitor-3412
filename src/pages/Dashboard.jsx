@@ -12,11 +12,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     const stored = localStorage.getItem('dashboardNotifications');
-    if (!stored || JSON.parse(stored).length === 0) {
-      setNotifications(defaultNotifications);
-    } else {
-      setNotifications(JSON.parse(stored));
-    }
+    const initialNotifications = stored && JSON.parse(stored).length > 0
+      ? JSON.parse(stored)
+      : defaultNotifications;
+
+    setNotifications(initialNotifications);
   }, []);
 
   useEffect(() => {
@@ -29,8 +29,8 @@ const Dashboard = () => {
 
   return (
     <div className="p-4 space-y-6 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Guardian Dashboard</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Kingdom Kids Parent Dashboard</h1>
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
@@ -42,13 +42,13 @@ const Dashboard = () => {
         </select>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
         <ScreenTimeControls />
         <MemoryVerse />
         <BiblicalPrompts />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Recent Notifications</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
           <AnimatePresence>
@@ -63,6 +63,7 @@ const Dashboard = () => {
                 <NotificationCard
                   notification={notification}
                   onAction={handleAction}
+                  showAvatar={notification.type === 'friend_request'}
                 />
               </motion.div>
             ))}
@@ -74,3 +75,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
