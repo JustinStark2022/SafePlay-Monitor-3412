@@ -4,6 +4,7 @@ import NotificationCard from '@/components/NotificationCard';
 import ScreenTimeControls from '@/components/ScreenTimeControls';
 import MemoryVerse from '@/components/MemoryVerse';
 import BiblicalPrompts from '@/components/BiblicalPrompts';
+import defaultNotifications from '@/data/defaultNotifications';
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('week');
@@ -11,9 +12,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     const stored = localStorage.getItem('dashboardNotifications');
-    if (!stored) {
-      const defaultNotifs = NotificationCard.defaultNotifications || [];
-      setNotifications(defaultNotifs);
+    if (!stored || JSON.parse(stored).length === 0) {
+      setNotifications(defaultNotifications);
     } else {
       setNotifications(JSON.parse(stored));
     }
@@ -28,7 +28,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <div className="p-4 space-y-6 max-w-7xl mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Guardian Dashboard</h1>
         <select
@@ -50,7 +50,7 @@ const Dashboard = () => {
 
       <div className="mt-6">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Recent Notifications</h2>
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto pr-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
           <AnimatePresence>
             {notifications.map((notification) => (
               <motion.div
@@ -58,7 +58,7 @@ const Dashboard = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, height: 0 }}
-                className="h-full flex"
+                className="w-full h-full flex"
               >
                 <NotificationCard
                   notification={notification}
