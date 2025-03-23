@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NotificationCard from '@/components/NotificationCard';
@@ -8,15 +7,15 @@ import BiblicalPrompts from '@/components/BiblicalPrompts';
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('week');
-  const [notifications, setNotifications] = useState(() => {
-    const stored = localStorage.getItem('dashboardNotifications');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    if (notifications.length === 0) {
+    const stored = localStorage.getItem('dashboardNotifications');
+    if (!stored) {
       const defaultNotifs = NotificationCard.defaultNotifications || [];
       setNotifications(defaultNotifs);
+    } else {
+      setNotifications(JSON.parse(stored));
     }
   }, []);
 
