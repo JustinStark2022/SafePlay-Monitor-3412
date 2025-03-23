@@ -9,7 +9,8 @@ import {
   RiHeartLine,
   RiStarLine
 } from 'react-icons/ri';
-import ScreenTimeControls from '@/components/ScreenTimeControls';
+import MemoryVerse from '@/components/MemoryVerse';
+import ScreenTimeControls from '../components/ScreenTimeControls';
 
 const Sidebar = () => {
   const menuItems = [
@@ -22,6 +23,14 @@ const Sidebar = () => {
     { path: '/alerts', icon: RiAlertLine, label: 'Alerts' },
     { path: '/settings', icon: RiSettings4Line, label: 'Settings' }
   ];
+
+  const handleAddTime = () => {
+    console.log('Add screen time');
+  };
+
+  const handleSubtractTime = () => {
+    console.log('Subtract screen time');
+  };
 
   return (
     <aside className="bg-white w-64 h-screen shadow-lg flex flex-col justify-between">
@@ -47,15 +56,21 @@ const Sidebar = () => {
             </NavLink>
           ))}
         </nav>
-      </div>
 
-      {/* Screen Time Controls Below Navigation */}
-      <div className="px-6 pb-6">
-        <div className="border-t border-gray-200 pt-4">
-          <h2 className="text-sm font-semibold text-gray-500 mb-2">Screen Time Settings</h2>
+        {/* Memory Verse Section */}
+        <div className="px-6 mt-6">
+          
+          <MemoryVerse />
+        </div>
+
+         {/* Memory Verse Section */}
+        <div className="px-6 mt-6">
+          
           <ScreenTimeControls />
         </div>
       </div>
+
+      
     </aside>
   );
 };
