@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Button from '@/components/Button';
 import {
   RiAlertFill,
   RiUserAddLine,
@@ -123,25 +124,22 @@ const Dashboard = () => {
                 </div>
                   {notification.status === 'pending' && (
                     <div className="flex gap-2 mt-2 sm:mt-0">
-                      <button
+                      // Inside the pending notification section
+                      <Button
                         onClick={() => handleAction(notification.id, 'approved')}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-200 hover:bg-green-300 text-black font-semibold rounded-xl transition-all duration-300 shadow-sm hover:shadow-md border border-green-600"
+                        className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-400"
                       >
-                        <RiCheckLine className="w-5 h-5 text-green-700" />
-                        <span className="transition-transform duration-300 hover:scale-105" style={{ WebkitTextStroke: '0.3px black' }}>
-                          Allow
-                        </span>
-                      </button>
+                        <RiCheckLine className="w-5 h-5 mr-2" />
+                        Allow
+                      </Button>
 
-                      <button
+                      <Button
                         onClick={() => handleAction(notification.id, 'blocked')}
-                        className="flex items-center gap-2 px-4 py-2 bg-red-200 hover:bg-red-300 text-black font-semibold rounded-xl transition-all duration-300 shadow-sm hover:shadow-md border border-red-600"
+                        className="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400"
                       >
-                        <RiCloseLine className="w-5 h-5 text-red-700" />
-                        <span className="transition-transform duration-300 hover:scale-105" style={{ WebkitTextStroke: '0.3px black' }}>
-                          Block
-                        </span>
-                      </button>
+                        <RiCloseLine className="w-5 h-5 mr-2" />
+                        Block
+                      </Button>
                     </div>
                   )}
                 </div>
