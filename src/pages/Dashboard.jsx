@@ -56,7 +56,6 @@ const Dashboard = () => {
                   notification={notification}
                   onAction={handleAction}
                   buttonSize="tiny"
-                  showIcons={false}
                 />
               </motion.div>
             ))}
@@ -66,8 +65,8 @@ const Dashboard = () => {
 
       {/* Biblical Prompts Section */}
       <div className="mt-12">
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Biblical Discussion Prompts</h2>
-        <BiblicalPrompts />
+       
+        <BiblicalPrompts useCarousel={true} />
       </div>
     </div>
   );
@@ -76,3 +75,5 @@ const Dashboard = () => {
 export default Dashboard;
 
 
+  
+ 
