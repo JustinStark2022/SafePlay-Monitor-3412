@@ -24,19 +24,11 @@ const Sidebar = () => {
     { path: '/settings', icon: RiSettings4Line, label: 'Settings' }
   ];
 
-  const handleAddTime = () => {
-    console.log('Add screen time');
-  };
-
-  const handleSubtractTime = () => {
-    console.log('Subtract screen time');
-  };
-
   return (
     <aside className="bg-white w-64 h-screen shadow-lg flex flex-col justify-between">
       <div>
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-primary-600">GuardianShepherd</h1>
+          <h1 className="text-2xl font-bold text-primary-600">Kingdom Kids</h1>
         </div>
         <nav className="mt-6">
           {menuItems.map((item) => (

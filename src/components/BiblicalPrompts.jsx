@@ -53,8 +53,8 @@ const BiblicalPrompts = () => {
 
   return (
     <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6">
-      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
-      Biblical talks to have with your kids today
+      <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
+        Biblical talks to have with your kids today
       </h3>
       <div 
         className="overflow-hidden" 

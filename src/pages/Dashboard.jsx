@@ -30,7 +30,7 @@ const Dashboard = () => {
       {/* Notifications Section */}
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Kingdom Kids Parent Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Parent Dashboard</h1>
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
@@ -40,6 +40,11 @@ const Dashboard = () => {
             <option value="week">This Week</option>
             <option value="month">This Month</option>
           </select>
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+          <h3 className="text-3sm  text-gray-800 dark:text-white">Recent Notifications</h3>
+         
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
