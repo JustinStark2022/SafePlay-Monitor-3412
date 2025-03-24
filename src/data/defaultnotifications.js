@@ -22,7 +22,7 @@ const defaultNotifications = [
       id: 2,
       type: 'chat_alert',
       timestamp: '5 minutes ago',
-      content: 'Inappropriate language detected in chat',
+      content: 'Inappropriate language',
       status: 'pending',
       chatContext: {
         game: 'Adopt Me!',
@@ -38,7 +38,7 @@ const defaultNotifications = [
       id: 3,
       type: 'friend_request',
       timestamp: '10 minutes ago',
-      content: 'New friend request received',
+      content: 'New friend request',
       status: 'pending',
       friendRequest: {
         username: 'Player456',
