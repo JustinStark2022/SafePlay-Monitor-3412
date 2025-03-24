@@ -5,7 +5,7 @@ const defaultNotifications = [
       id: 1,
       type: 'new_game',
       timestamp: 'Just now',
-      content: 'Started playing "Blox Fruits"',
+      content: 'New game approval request',
       status: 'pending',
       game: {
         name: 'Blox Fruits',
