@@ -14,7 +14,7 @@ pnpm-debug.log*
 # Environment variable files
 .env
 .env.*.local
-
+venv
 # OS-specific files
 .DS_Store
 Thumbs.db
@@ -41,3 +41,6 @@ coverage/
 
 # Misc
 *.local
+
+# Visual Studio Code files
+.vscode/

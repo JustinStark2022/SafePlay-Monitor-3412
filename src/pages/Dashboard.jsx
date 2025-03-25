@@ -2,27 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NotificationCard from '@/components/NotificationCard';
 import BiblicalPrompts from '@/components/BiblicalPrompts';
-import defaultNotifications from '@/data/defaultNotifications';
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('week');
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const stored = localStorage.getItem('dashboardNotifications');
-    if (!stored || JSON.parse(stored).length === 0) {
-      setNotifications(defaultNotifications);
-    } else {
-      setNotifications(JSON.parse(stored));
-    }
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/notifications");
+        const data = await res.json();
+        if (Array.isArray(data.notifications)) {
+          setNotifications(data.notifications);
+        }
+      } catch (err) {
+        console.error("[Dashboard] Failed to load notifications:", err);
+      }
+    };
+
+    fetchNotifications();
+
+    const interval = setInterval(fetchNotifications, 15000); // auto-refresh every 15s
+    return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('dashboardNotifications', JSON.stringify(notifications));
-  }, [notifications]);
+  const handleAction = async (id, action) => {
+    try {
+      await fetch(`http://localhost:5000/notifications/${id}/action`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
 
-  const handleAction = (id, action) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+    } catch (err) {
+      console.error(`[Dashboard] Failed to ${action} notification:`, err);
+    }
   };
 
   return (
@@ -43,8 +58,7 @@ const Dashboard = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <h3 className="text-3sm  text-gray-800 dark:text-white">Recent Notifications</h3>
-         
+          <h3 className="text-sm text-gray-800 dark:text-white">Recent Notifications</h3>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -70,7 +84,6 @@ const Dashboard = () => {
 
       {/* Biblical Prompts Section */}
       <div className="mt-12">
-       
         <BiblicalPrompts useCarousel={true} />
       </div>
     </div>
@@ -79,6 +92,4 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-
-  
  
