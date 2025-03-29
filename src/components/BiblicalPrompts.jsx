@@ -25,43 +25,35 @@ const prompts = [
 ];
 
 const BiblicalPrompts = () => {
-  // We want two cards per slide:
   const visibleCards = 2;
   const totalSlides = Math.ceil(prompts.length / visibleCards);
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const timeoutRef = useRef(null);
 
-  // Wrap nextSlide in useCallback to satisfy the dependency array
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
   }, [totalSlides]);
 
   useEffect(() => {
-    timeoutRef.current = setTimeout(() => {
-      nextSlide();
-    }, 7000);
+    timeoutRef.current = setTimeout(nextSlide, 8000);
     return () => clearTimeout(timeoutRef.current);
   }, [currentIndex, nextSlide]);
 
   const handleMouseEnter = () => clearTimeout(timeoutRef.current);
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      nextSlide();
-    }, 7000);
+    timeoutRef.current = setTimeout(nextSlide, 8000);
   };
 
   return (
-    <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6">
-      <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
-        Biblical talks to have with your kids today
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
+      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 text-center">
+        Biblical Prompts for Family Conversations
       </h3>
-      <div 
-        className="overflow-hidden" 
-        onMouseEnter={handleMouseEnter} 
+      <div
+        className="overflow-hidden"
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* The slider container: each slide takes full width */}
         <div
           className="grid transition-transform duration-700 ease-in-out"
           style={{
@@ -70,15 +62,21 @@ const BiblicalPrompts = () => {
           }}
         >
           {Array.from({ length: totalSlides }).map((_, slideIndex) => (
-            <div key={slideIndex} className="grid grid-cols-2 gap-4 w-full flex-shrink-0">
+            <div
+              key={slideIndex}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full"
+            >
               {prompts
-                .slice(slideIndex * visibleCards, slideIndex * visibleCards + visibleCards)
+                .slice(
+                  slideIndex * visibleCards,
+                  slideIndex * visibleCards + visibleCards
+                )
                 .map((prompt, idx) => (
                   <motion.div
                     key={idx}
                     className="p-4 rounded-xl border border-gray-300 dark:border-gray-600 shadow bg-gray-50 dark:bg-gray-700"
                   >
-                    <h4 className="text-md font-semibold text-primary-700 dark:text-primary-300 mb-2">
+                    <h4 className="text-base font-semibold text-primary-700 dark:text-primary-300 mb-2">
                       {prompt.question}
                     </h4>
                     <p className="text-sm text-gray-700 dark:text-gray-200">
@@ -95,4 +93,3 @@ const BiblicalPrompts = () => {
 };
 
 export default BiblicalPrompts;
-

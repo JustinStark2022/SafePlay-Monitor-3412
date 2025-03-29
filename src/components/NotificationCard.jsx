@@ -13,13 +13,13 @@ const NotificationCard = ({ notification, onAction }) => {
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'new_game':
-        return { icon: RiAlertFill, color: 'text-blue-600', bg: 'bg-blue-100' };
+        return { icon: RiAlertFill, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-950' };
       case 'chat_alert':
-        return { icon: RiMessage3Line, color: 'text-red-600', bg: 'bg-red-100' };
+        return { icon: RiMessage3Line, color: 'text-red-600', bg: 'bg-red-100 dark:bg-red-900' };
       case 'friend_request':
-        return { icon: RiUserAddLine, color: 'text-green-600', bg: 'bg-green-100' };
+        return { icon: RiUserAddLine, color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900' };
       default:
-        return { icon: RiAlertFill, color: 'text-gray-600', bg: 'bg-gray-100' };
+        return { icon: RiAlertFill, color: 'text-gray-600', bg: 'bg-gray-100 dark:bg-gray-800' };
     }
   };
 
@@ -31,22 +31,22 @@ const NotificationCard = ({ notification, onAction }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, height: 0 }}
       layout
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 border border-gray-200 dark:border-gray-700 w-full min-h-[14rem] flex flex-col justify-between"
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-5 border border-gray-200 dark:border-gray-700 w-full flex flex-col gap-4"
     >
       {/* Header Section */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex justify-between items-start gap-3">
+        <div className="flex items-start gap-4">
           <div className={`p-2 rounded-full ${bg}`}>
             <Icon className={`w-6 h-6 ${color}`} />
           </div>
-          <div>
+          <div className="space-y-1">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{notification.content}</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">{notification.timestamp}</p>
           </div>
         </div>
 
         {notification.status === 'pending' && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-end">
             <Button
               onClick={() => onAction(notification.id, 'approved')}
               className="bg-green-500 hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-400"
@@ -63,10 +63,10 @@ const NotificationCard = ({ notification, onAction }) => {
         )}
       </div>
 
-      {/* Content Section */}
-      <div className="overflow-auto space-y-4 text-sm text-gray-700 dark:text-gray-300 flex-1">
+      {/* Body Content */}
+      <div className="overflow-auto text-sm text-gray-700 dark:text-gray-300 space-y-3">
         {notification.type === 'new_game' && notification.game && (
-          <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg space-y-2">
+          <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950 space-y-2">
             <p className="font-semibold text-blue-800 dark:text-blue-200">{notification.game.name}</p>
             <p>
               <strong>Risk Level:</strong> {notification.game.risk}
@@ -86,7 +86,7 @@ const NotificationCard = ({ notification, onAction }) => {
         )}
 
         {notification.type === 'chat_alert' && notification.chatContext && (
-          <div className="bg-red-50 dark:bg-red-900 p-3 rounded-lg space-y-2">
+          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900 space-y-2">
             <p className="font-semibold text-red-800 dark:text-red-200">
               Game: {notification.chatContext.game} at {notification.chatContext.time}
             </p>
@@ -108,7 +108,7 @@ const NotificationCard = ({ notification, onAction }) => {
         )}
 
         {notification.type === 'friend_request' && notification.friendRequest && (
-          <div className="bg-green-50 dark:bg-green-900 p-3 rounded-lg space-y-1">
+          <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900 space-y-1">
             <p className="font-semibold text-green-800 dark:text-green-200">
               Username: {notification.friendRequest.username}
             </p>

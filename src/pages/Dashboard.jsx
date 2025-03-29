@@ -1,102 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React from 'react';
 import NotificationCard from '@/components/NotificationCard';
 import BiblicalPrompts from '@/components/BiblicalPrompts';
+import { RiAlarmWarningLine } from 'react-icons/ri';
 
-const Dashboard = () => {
-  const [timeRange, setTimeRange] = useState('week');
-  const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/notifications");
-        const data = await res.json();
-        console.log("[Dashboard] Fetched data:", data);
-  
-        if (Array.isArray(data.notifications)) {
-          setNotifications(data.notifications);
-        } else {
-          console.warn("Invalid notifications format:", data.notifications);
-        }
-      } catch (err) {
-        console.error("[Dashboard] Failed to load notifications:", err);
-      }
-    };
-  
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 15000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleAction = async (id, action) => {
-    try {
-      await fetch(`http://localhost:5000/notifications/${id}/action`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
-      });
-
-      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-    } catch (err) {
-      console.error(`[Dashboard] Failed to ${action} notification:`, err);
-    }
-  };
-
+const Dashboard = ({ notifications }) => {
   return (
-    <div className="p-4 space-y-10 max-w-7xl mx-auto">
-      {/* Notifications Section */}
-      <div>
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Parent Dashboard</h1>
-          <select
-            value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value)}
-            className="px-4 py-2 border rounded-lg text-gray-700 dark:text-white dark:bg-gray-800 dark:border-white/30 focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="day">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-          </select>
+    <div className="flex flex-col w-full gap-6 px-4 sm:px-6 lg:px-8 py-6">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 w-full">
+        {/* Left Panel - Notifications */}
+        <div className="col-span-3 xl:col-span-2 space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Active Alerts</h2>
+            <div className="space-y-4">
+              {notifications && notifications.length > 0 ? (
+                notifications.map((n) => (
+                  <NotificationCard key={n.id} notification={n} onAction={() => {}} />
+                ))
+              ) : (
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <RiAlarmWarningLine className="w-6 h-6" />
+                  No active alerts right now.
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <h3 className="text-sm text-gray-800 dark:text-white">Recent Notifications</h3>
-        </div>
-
-        {notifications.length === 0 && (
-          <p className="text-gray-400 italic">Loading notifications...</p>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 min-h-[200px]">
-
-          <AnimatePresence>
-            {notifications.map((notification) => (
-              <motion.div
-                key={notification.id}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, height: 0 }}
-                className="w-full h-full flex"
-              >
-                <NotificationCard
-                  notification={notification}
-                  onAction={handleAction}
-                  buttonSize="tiny"
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+        {/* Right Panel is now removed */}
       </div>
 
-      {/* Biblical Prompts Section */}
-      <div className="mt-12">
-        <BiblicalPrompts useCarousel={true} />
+      {/* Bottom Section - Full Width Biblical Prompts */}
+      <div className="w-full">
+        <BiblicalPrompts />
       </div>
     </div>
   );
 };
 
 export default Dashboard;
-
- 

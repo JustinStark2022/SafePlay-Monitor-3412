@@ -8,26 +8,41 @@ const ScreenTimeControls = () => {
   const reduceTime = () => setScreenTime(prev => Math.max(prev - 1, 0));
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border border-gray-200 dark:border-gray-700 space-y-4">
-      <h3 className="text-lg font-bold text-gray-800 dark:text-white">Screen Time Settings</h3>
-      <p className="text-gray-600 dark:text-gray-300">
-        Current Limit: <span className="font-semibold">{screenTime}</span> {screenTime === 1 ? 'hour' : 'hours'}
-      </p>
-      <div className="flex gap-3">
-        <button
-          onClick={addTime}
-          className="w-9 h-9 text-xl font-bold text-black dark:text-white bg-gray-100 dark:bg-gray-700 rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-          aria-label="Add Time"
-        >
-          +
-        </button>
-        <button
-          onClick={reduceTime}
-          className="w-9 h-9 text-xl font-bold text-black dark:text-white bg-gray-100 dark:bg-gray-700 rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-          aria-label="Reduce Time"
-        >
-          -
-        </button>
+    <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 space-y-4 w-full">
+      <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+        Screen Time Settings
+      </h3>
+
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <p className="text-gray-600 dark:text-gray-300 text-base">
+          Limit: <span className="font-semibold text-primary-600 dark:text-primary-400">{screenTime}</span>{' '}
+          {screenTime === 1 ? 'hour' : 'hours'}
+        </p>
+
+        <div className="flex gap-3">
+          <button
+            onClick={addTime}
+            aria-label="Increase Time"
+            className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-800 border border-green-300 dark:border-green-600 hover:bg-green-200 dark:hover:bg-green-700 text-green-800 dark:text-green-200 font-bold transition"
+          >
+            +
+          </button>
+          <button
+            onClick={reduceTime}
+            aria-label="Decrease Time"
+            className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-800 border border-red-300 dark:border-red-600 hover:bg-red-200 dark:hover:bg-red-700 text-red-800 dark:text-red-200 font-bold transition"
+          >
+            -
+          </button>
+        </div>
+      </div>
+
+      {/* Optional visual bar */}
+      <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+        <div
+          className="bg-primary-500 h-full transition-all duration-300"
+          style={{ width: `${Math.min(screenTime * 10, 100)}%` }}
+        ></div>
       </div>
     </div>
   );

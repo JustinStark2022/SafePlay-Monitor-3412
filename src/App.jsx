@@ -18,8 +18,40 @@ import BibleAchievementSystem from './components/achievement/BibleAchievementSys
 function AppContent() {
   const location = useLocation();
 
+  // ✅ Dummy sample notifications
+  const notifications = [
+    {
+      id: 1,
+      type: 'new_game',
+      content: 'New Game Played: Minecraft Adventures',
+      timestamp: 'Just now',
+      status: 'pending',
+      game: {
+        name: 'Minecraft Adventures',
+        risk: 'Low',
+        summary: 'A creative sandbox game with educational potential.',
+        concerns: ['Multiplayer chat', 'Unmoderated mods'],
+      },
+    },
+    {
+      id: 2,
+      type: 'chat_alert',
+      content: 'Flagged Chat in Roblox',
+      timestamp: '5 mins ago',
+      status: 'pending',
+      chatContext: {
+        game: 'Roblox',
+        time: '12:34 PM',
+        messages: [
+          { user: 'GamerKid99', message: 'This game is trash!', flagged: true },
+          { user: 'FaithGirl07', message: 'Be kind :)', flagged: false },
+        ],
+      },
+    },
+  ];
+
   return (
-    <div className="flex h-screen bg-gray-100 font-body">
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 font-body">
       <Sidebar />
       <main className="flex-1 overflow-x-hidden overflow-y-auto">
         <AnimatePresence mode="wait">
@@ -29,10 +61,10 @@ function AppContent() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="container mx-auto px-6 py-8"
+            className="w-full px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto"
           >
             <Routes location={location}>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Dashboard notifications={notifications} />} />
               <Route path="/child" element={<ChildDashboard />} />
               <Route path="/games" element={<GameList />} />
               <Route path="/alerts" element={<Alerts />} />
