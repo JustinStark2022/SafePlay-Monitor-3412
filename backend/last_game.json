@@ -1,0 +1,16 @@
+{
+  "userId": "8202819889",
+  "game": {
+    "name": "Website",
+    "placeId": null,
+    "risk": "MODERATE",
+    "summary": "Auto-detected via Roblox Presence API.",
+    "concerns": [
+      "Verify this game manually for safety.",
+      "This is a live session detection and may change often."
+    ]
+  },
+  "timestamp": "Just now",
+  "type": "new_game",
+  "status": "pending"
+}

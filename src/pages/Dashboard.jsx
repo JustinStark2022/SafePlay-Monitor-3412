@@ -1,56 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NotificationCard from '@/components/NotificationCard';
-import ScreenTimeControls from '@/components/ScreenTimeControls';
-import MemoryVerse from '@/components/MemoryVerse';
 import BiblicalPrompts from '@/components/BiblicalPrompts';
-import defaultNotifications from '@/data/defaultNotifications';
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('week');
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const stored = localStorage.getItem('dashboardNotifications');
-    if (!stored || JSON.parse(stored).length === 0) {
-      setNotifications(defaultNotifications);
-    } else {
-      setNotifications(JSON.parse(stored));
-    }
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/notifications");
+        const data = await res.json();
+        console.log("[Dashboard] Fetched data:", data);
+  
+        if (Array.isArray(data.notifications)) {
+          setNotifications(data.notifications);
+        } else {
+          console.warn("Invalid notifications format:", data.notifications);
+        }
+      } catch (err) {
+        console.error("[Dashboard] Failed to load notifications:", err);
+      }
+    };
+  
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 15000);
+    return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('dashboardNotifications', JSON.stringify(notifications));
-  }, [notifications]);
+  const handleAction = async (id, action) => {
+    try {
+      await fetch(`http://localhost:5000/notifications/${id}/action`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
 
-  const handleAction = (id, action) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
+      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+    } catch (err) {
+      console.error(`[Dashboard] Failed to ${action} notification:`, err);
+    }
   };
 
   return (
-    <div className="p-4 space-y-6 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Guardian Dashboard</h1>
-        <select
-          value={timeRange}
-          onChange={(e) => setTimeRange(e.target.value)}
-          className="px-4 py-2 border rounded-lg text-gray-700 dark:text-white dark:bg-gray-800 dark:border-white/30 focus:outline-none focus:ring-2 focus:ring-primary-500"
-        >
-          <option value="day">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-        </select>
-      </div>
+    <div className="p-4 space-y-10 max-w-7xl mx-auto">
+      {/* Notifications Section */}
+      <div>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Parent Dashboard</h1>
+          <select
+            value={timeRange}
+            onChange={(e) => setTimeRange(e.target.value)}
+            className="px-4 py-2 border rounded-lg text-gray-700 dark:text-white dark:bg-gray-800 dark:border-white/30 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+            <option value="day">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+          </select>
+        </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <ScreenTimeControls />
-        <MemoryVerse />
-        <BiblicalPrompts />
-      </div>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+          <h3 className="text-sm text-gray-800 dark:text-white">Recent Notifications</h3>
+        </div>
 
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Recent Notifications</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        {notifications.length === 0 && (
+          <p className="text-gray-400 italic">Loading notifications...</p>
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 min-h-[200px]">
+
           <AnimatePresence>
             {notifications.map((notification) => (
               <motion.div
@@ -63,14 +81,22 @@ const Dashboard = () => {
                 <NotificationCard
                   notification={notification}
                   onAction={handleAction}
+                  buttonSize="tiny"
                 />
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Biblical Prompts Section */}
+      <div className="mt-12">
+        <BiblicalPrompts useCarousel={true} />
+      </div>
     </div>
   );
 };
 
 export default Dashboard;
+
+ 
