@@ -1,30 +1,40 @@
 # app.py
-# app.py
 import os
 import time
 import threading
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+
 from roblox_utils import get_latest_game_activity, load_previous_activity, save_current_activity
 from models import db, RobloxActivity
 
+# Load environment variables
 load_dotenv()
 
+# Initialize Flask app
 app = Flask(__name__)
+
+# Enable CORS for frontend at localhost:5173
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+
+# Configure the database
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///roblox.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev")
 db.init_app(app)
 
-# In-memory notifications store
+# In-memory notification storage
 notifications = []
 approved_games = set()
 blocked_games = set()
 
+# Routes
 @app.route("/notifications", methods=["GET"])
 def get_notifications():
     return jsonify({"notifications": notifications})
+
 
 @app.route("/notifications", methods=["POST"])
 def add_notification():
@@ -33,6 +43,7 @@ def add_notification():
         return jsonify({"error": "Invalid data"}), 400
     notifications.append(data)
     return jsonify({"message": "Notification added"}), 201
+
 
 @app.route("/notifications/<int:notif_id>/action", methods=["POST"])
 def handle_action(notif_id):
@@ -50,6 +61,7 @@ def handle_action(notif_id):
             return jsonify({"message": f"Notification {action}"}), 200
     return jsonify({"error": "Notification not found"}), 404
 
+
 @app.route("/api/games/status", methods=["GET"])
 def get_game_status():
     return jsonify({
@@ -57,7 +69,8 @@ def get_game_status():
         "blocked": list(blocked_games)
     })
 
-# Roblox polling thread
+
+# Roblox polling logic
 def poll_roblox():
     user_id = os.getenv("ROBLOX_USER_ID")
     if not user_id:
@@ -81,14 +94,17 @@ def poll_roblox():
 
             print("[Poller] New game detected:", new_notification["game"]["name"])
 
-            # Avoid duplicates
+            # Prevent duplicates
             if all(n["game"]["name"] != new_notification["game"]["name"] for n in notifications):
                 notifications.insert(0, new_notification)
 
             save_current_activity(latest_game)
             previous_game = latest_game
-        time.sleep(10)  # Poll every 10 seconds
 
+        time.sleep(10)  # Poll interval
+
+
+# Main entry point
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()

@@ -44,3 +44,4 @@ coverage/
 
 # Visual Studio Code files
 .vscode/
+.qodo

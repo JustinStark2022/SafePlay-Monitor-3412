@@ -30,7 +30,8 @@ const NotificationCard = ({ notification, onAction }) => {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, height: 0 }}
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 border border-gray-200 dark:border-gray-700 w-full h-full flex flex-col justify-between min-h-[500px]"
+      layout
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 border border-gray-200 dark:border-gray-700 w-full min-h-[14rem] flex flex-col justify-between"
     >
       {/* Header Section */}
       <div className="flex items-start justify-between mb-4">
@@ -71,7 +72,7 @@ const NotificationCard = ({ notification, onAction }) => {
               <strong>Risk Level:</strong> {notification.game.risk}
             </p>
             <p>{notification.game.summary || 'No summary provided.'}</p>
-            {notification.game.concerns && (
+            {notification.game.concerns?.length > 0 && (
               <div>
                 <p className="font-semibold text-red-700 dark:text-red-300">Concerns:</p>
                 <ul className="list-disc list-inside">

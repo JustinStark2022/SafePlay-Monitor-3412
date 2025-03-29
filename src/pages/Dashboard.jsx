@@ -12,17 +12,20 @@ const Dashboard = () => {
       try {
         const res = await fetch("http://localhost:5000/notifications");
         const data = await res.json();
+        console.log("[Dashboard] Fetched data:", data);
+  
         if (Array.isArray(data.notifications)) {
           setNotifications(data.notifications);
+        } else {
+          console.warn("Invalid notifications format:", data.notifications);
         }
       } catch (err) {
         console.error("[Dashboard] Failed to load notifications:", err);
       }
     };
-
+  
     fetchNotifications();
-
-    const interval = setInterval(fetchNotifications, 15000); // auto-refresh every 15s
+    const interval = setInterval(fetchNotifications, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -61,7 +64,11 @@ const Dashboard = () => {
           <h3 className="text-sm text-gray-800 dark:text-white">Recent Notifications</h3>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        {notifications.length === 0 && (
+          <p className="text-gray-400 italic">Loading notifications...</p>
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 min-h-[200px]">
+
           <AnimatePresence>
             {notifications.map((notification) => (
               <motion.div
